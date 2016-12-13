@@ -1,31 +1,43 @@
-def trig_Sensor(Pin):               #Keep output pin true for 10uS
-    GPIO.output(Pin, GPIO.HIGH)
+# Used for Raspberry pi 3 model B with HC-SR04 ultrasound sensor.
+# This program will find distance from the sensors sonic pulse echoing time and output it to a file.
+
+
+def trig_sensor(pin):               # Keep output pin true for 10uS
+    GPIO.output(pin, GPIO.HIGH)
     time.sleep(0.00001)
-    GPIO.output(Pin, GPIO.LOW)
+    GPIO.output(pin, GPIO.LOW)
     return
 
-def echo_Sensor(Pin):               #Count how long input is true in [uS].
+
+def echo_sensor(pin):               # Count how long input is true in [uS].
     pulse_end = pulse_start = 0
-    while GPIO.input(Pin) == 0:
+    while GPIO.input(pin) == 0:
         pulse_start = time.time()
-    while GPIO.input(Pin) == 1:
+    while GPIO.input(pin) == 1:
         pulse_end = time.time()
     return pulse_end - pulse_start
 
-def measure_Distance():             #Calculate distance from sound traveltime
-    trig_Sensor(outPin)
-    return echo_Sensor(inPin) * 340.29 / 2
+
+def measure_distance():             # Calculate distance from sound traveltime
+    trig_sensor(outPin)
+    return echo_sensor(inPin) * 340.29 / 2
+
+
+def write(distance):                # Writes distance as tring to a file 'distance.txt' for later use
+    with open('distance.txt', 'w') as open_file:
+        open_file.write(str(distance) + ' m')
+        open_file.close()
+        return
 
 
 if __name__ == '__main__':
-    import Rpi.GPIO as GPIO
+    import RPi.GPIO as GPIO
     import time
 
-    inPin = 23  # Echo from sensor
-    outPin = 24  # Sensor trigger
+    GPIO.setmode(GPIO.BCM)          # Setting up pins
+    GPIO.setup(23, GPIO.IN)         # Echo from sensor in 23
+    GPIO.setup(24, GPIO.OUT)        # Trigger to sensor in 24
+    inPin = 23
+    outPin = 24
 
-    GPIO.setmode(GPIO.BOARD)  # Setting up pins
-    GPIO.setup(inPin, GPIO.IN)  # echo
-    GPIO.setup(outPin, GPIO.OUT)  # trigger
-
-    print(measure_Distance())
+    write(measure_distance())
