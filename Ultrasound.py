@@ -2,14 +2,14 @@
 # This program will find distance from the sensors sonic pulse echoing time and output it to a file.
 
 
-def trig_sensor(pin):               # Keep output pin true for 10uS
+def trig_sensor(pin):               # Keep output pin 'high for 10uS
     GPIO.output(pin, GPIO.HIGH)
     time.sleep(0.00001)
     GPIO.output(pin, GPIO.LOW)
     return
 
 
-def echo_sensor(pin):               # Count how long input is true in [uS].
+def echo_sensor(pin):               # Count how long input is 'high' in [uS].
     pulse_end = pulse_start = 0
     while GPIO.input(pin) == 0:
         pulse_start = time.time()
@@ -23,7 +23,7 @@ def measure_distance():             # Calculate distance from sound traveltime
     return echo_sensor(inPin) * 340.29 / 2
 
 
-def writefile(distance):                # Writes distance as tring to a file 'distance.txt' for later use
+def writefile(distance):            # Writes distance as tring to a file 'distance.txt' for later use
     with open('distance.txt', 'w') as open_file:
         open_file.write(str(distance) + ' m')
         open_file.close()
