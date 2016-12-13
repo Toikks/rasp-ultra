@@ -23,7 +23,7 @@ def measure_distance():             # Calculate distance from sound traveltime
     return echo_sensor(inPin) * 340.29 / 2
 
 
-def write(distance):                # Writes distance as tring to a file 'distance.txt' for later use
+def writefile(distance):                # Writes distance as tring to a file 'distance.txt' for later use
     with open('distance.txt', 'w') as open_file:
         open_file.write(str(distance) + ' m')
         open_file.close()
@@ -40,4 +40,4 @@ if __name__ == '__main__':
     inPin = 23
     outPin = 24
 
-    write(measure_distance())
+    writefile(measure_distance())
